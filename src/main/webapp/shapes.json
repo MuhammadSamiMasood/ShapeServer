@@ -11,8 +11,8 @@
     },
     {
       "type": "rectangle",
-      "length": 20.0,
-      "width": 25.0
+      "width": 25,
+      "length": 20
     }
   ]
 }

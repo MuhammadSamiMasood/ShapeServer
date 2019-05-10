@@ -12,8 +12,6 @@ import java.io.*;
 
 public class Shapes extends HttpServlet {
 
-    //String line;
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -25,15 +23,24 @@ public class Shapes extends HttpServlet {
 
         String fileData = IOUtils.toString(fileReader);
 
-
-        //String fileData = "";
-        //while ((line = bufferedReader.readLine()) != null) {
-        //    fileData += line;
-        //}
-
         bufferedReader.close();
 
         printWriter.print(fileData);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        InputStreamReader inputStreamReader = new InputStreamReader(req.getInputStream());
+        String json = IOUtils.toString(inputStreamReader);
+
+        FileWriter fileWriter = new FileWriter(getServletContext().getRealPath("shapes.json"));
+        fileWriter.write(json);
+        fileWriter.close();
+
+        resp.setContentType("text/html");
+        PrintWriter printWriter = resp.getWriter();
+        printWriter.print("Data received");
 
     }
 }
