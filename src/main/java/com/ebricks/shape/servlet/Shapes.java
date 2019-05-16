@@ -1,6 +1,10 @@
 package com.ebricks.shape.servlet;
 
 import org.apache.commons.io.IOUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,28 +23,40 @@ public class Shapes extends HttpServlet {
         PrintWriter printWriter = resp.getWriter();
 
         FileReader fileReader = new FileReader(getServletContext().getRealPath("shapes.json"));
-        BufferedReader bufferedReader = new BufferedReader(fileReader);
 
         String fileData = IOUtils.toString(fileReader);
 
-        bufferedReader.close();
+        fileReader.close();
 
         printWriter.print(fileData);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
 
         InputStreamReader inputStreamReader = new InputStreamReader(req.getInputStream());
         String json = IOUtils.toString(inputStreamReader);
 
-        FileWriter fileWriter = new FileWriter(getServletContext().getRealPath("shapes.json"));
-        fileWriter.write(json);
-        fileWriter.close();
+        FileReader fileReader = new FileReader(getServletContext().getRealPath("shapes.json"));
+        try {
+            JSONObject jsonObject = (JSONObject) new JSONParser().parse(fileReader);
+            JSONArray jsonArray = (JSONArray)jsonObject.get("shapes");
+            jsonArray.add((JSONObject)new JSONParser().parse(json));
 
-        resp.setContentType("text/html");
+            FileWriter fileWriter = new FileWriter(getServletContext().getRealPath("shapes.json"));
+            fileWriter.write(jsonObject.toJSONString());
+            fileWriter.close();
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+
+        resp.setContentType("application/json");
         PrintWriter printWriter = resp.getWriter();
-        printWriter.print("Data received");
+        String responseJson = "{\"data status\":\"Received and posted successfully\"}";
+        printWriter.print(responseJson);
 
     }
 }
