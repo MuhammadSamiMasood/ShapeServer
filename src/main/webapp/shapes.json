@@ -1,0 +1,22 @@
+{
+  "shapes": [
+    {
+      "type": "circle",
+      "radius": 5.0
+    },
+    {
+      "apothem": 3.0,
+      "side": 2.0,
+      "type": "Pentagon"
+    },
+    {
+      "width": 25.0,
+      "length": 20.0,
+      "type": "rectangle"
+    },
+    {
+      "type": "circle",
+      "radius": 50.4
+    }
+  ]
+}
